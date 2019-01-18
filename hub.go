@@ -11,7 +11,7 @@ type Hub struct {
 	clients map[*Client]bool
 
 	// Inbound messages from the clients.
-	broadcast chan *messageData
+	broadcast chan *MessageData
 
 	// Register requests from the clients.
 	register chan *Client
@@ -21,15 +21,19 @@ type Hub struct {
 
 	//房间客户端
 	roomClients map[string]map[*Client]bool
+
+	//拓展信息
+	Expand Expand
 }
 
 func NewHub() *Hub {
 	return &Hub{
-		broadcast:   make(chan *messageData),
+		broadcast:   make(chan *MessageData),
 		register:    make(chan *Client),
 		unregister:  make(chan *Client),
 		clients:     make(map[*Client]bool),
 		roomClients: make(map[string]map[*Client]bool),
+		Expand:		 nil,
 	}
 }
 
@@ -54,6 +58,9 @@ func (h *Hub) Run() {
 			for client := range h.roomClients[messageData.fromUser.RoomInfo.RoomId] {
 				select {
 				case client.send <- messageData.content:
+					//记录发送内容
+					h.Expand.SendMessageDataCallbackFunc(messageData)
+				
 				default:
 					close(client.send)
 					delete(h.roomClients[messageData.fromUser.RoomInfo.RoomId], client)

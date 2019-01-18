@@ -7,13 +7,6 @@ type RoomInfo struct {
 	RoomInfoExpand
 }
 
-//TODO 可以diy拓展的内容
-type RoomInfoExpand struct {
-}
-
-type RoomInfoExpandFunc func(roomInfo *RoomInfo)
-
-var roomInfoList = make(map[string]*RoomInfo)
 
 //根据roomId获取房间信息
 func (r *RoomInfo) GetRoomInfoByRoomId(roomId string) error {

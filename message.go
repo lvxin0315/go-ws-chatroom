@@ -1,6 +1,6 @@
 package GoWsChatroom
 
-type messageData struct {
+type MessageData struct {
 	fromUser *Client
 	content []byte
 }

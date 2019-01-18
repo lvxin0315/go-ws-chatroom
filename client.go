@@ -47,12 +47,6 @@ type Client struct {
 	ClientExpand
 }
 
-//TODO 可以diy拓展的内容
-type ClientExpand struct {
-
-}
-type ClientExpandFunc func(client *Client)
-
 func (c *Client) readPump() {
 	defer func() {
 		c.hub.unregister <- c
@@ -71,7 +65,7 @@ func (c *Client) readPump() {
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		//补充房间,固定
-		messageData := &messageData{content:message,fromUser:c}
+		messageData := &MessageData{content:message,fromUser:c}
 		c.hub.broadcast <- messageData
 	}
 }
